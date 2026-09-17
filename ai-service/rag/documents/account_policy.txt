@@ -1,0 +1,19 @@
+FINBANK ACCOUNT POLICY
+
+Savings Account:
+A savings account is intended for regular personal banking transactions.
+
+Current Account:
+A current account is generally intended for business and higher-frequency transactions.
+
+Account information:
+Customers and authorized Relationship Managers may view permitted account information through the FinBank application.
+
+Balance:
+Account balance represents the available recorded balance in the demo banking system.
+
+Account security:
+Customers should never share passwords, PINs, OTPs, CVVs, or other authentication credentials.
+
+Important:
+The FinBank demo system does not perform real-money transfers.

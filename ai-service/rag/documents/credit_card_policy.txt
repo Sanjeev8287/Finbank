@@ -1,0 +1,19 @@
+FINBANK CREDIT CARD POLICY
+
+Credit limit:
+A customer's credit limit is assigned according to the applicable eligibility and risk criteria.
+
+Credit utilization:
+Credit utilization is calculated using the amount of credit currently used compared with the total assigned credit limit.
+
+General guideline:
+High credit utilization may indicate that a customer is using a significant portion of the available credit.
+
+For this FinBank demo:
+Credit utilization above 80% is treated as a high-utilization indicator for RM portfolio monitoring.
+
+Available credit:
+Available credit is the difference between the assigned credit limit and the currently used credit.
+
+Important:
+The RM AI Assistant cannot change a customer's credit limit.

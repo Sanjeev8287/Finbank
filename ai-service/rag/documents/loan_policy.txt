@@ -1,0 +1,24 @@
+FINBANK LOAN POLICY
+
+Personal Loan:
+FinBank demo personal loans are available to eligible customers based on internal eligibility criteria.
+
+Required documents:
+- Valid identity proof
+- Address proof
+- Income proof
+- Recent bank statement
+- Employment or business proof where applicable
+
+Loan repayment:
+Customers must repay the loan through the scheduled EMI amount.
+
+EMI:
+The next EMI date and EMI amount are shown in the customer's loan account information.
+
+Prepayment:
+Loan prepayment may be available according to the applicable loan terms.
+
+Important:
+Loan approval is subject to eligibility checks and internal credit assessment.
+The RM AI Assistant cannot approve or reject a loan.

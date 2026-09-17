@@ -1,0 +1,27 @@
+FINBANK SERVICE REQUEST POLICY
+
+Service requests allow customers to report issues or request assistance.
+
+Common service request categories include:
+- Account related issues
+- Card related issues
+- Loan related queries
+- Transaction related queries
+- Profile related requests
+
+Priority:
+Requests may have different priorities depending on the nature of the issue.
+
+Status:
+A service request may have statuses such as:
+- OPEN
+- IN_PROGRESS
+- PENDING
+- RESOLVED
+- CLOSED
+
+RM responsibility:
+Relationship Managers can review service requests belonging to their assigned customers.
+
+Important:
+The RM AI Assistant can provide information about pending service requests but cannot directly modify or close a service request.
