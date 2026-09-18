@@ -68,9 +68,34 @@ const PORT = process.env.PORT || 5000
 
 app.use(securityHeaders)
 
+// ========================================
+// CORS
+// Local Development + Vercel Production
+// ========================================
+
+const allowedOrigins = [
+  'http://localhost:5173',
+  'https://finbank-8a2a.vercel.app',
+]
+
 app.use(
   cors({
-    origin: 'http://localhost:5173',
+    origin: (origin, callback) => {
+      // Allow requests without an Origin header
+      // such as server-to-server or health-check requests
+      if (!origin) {
+        return callback(null, true)
+      }
+
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true)
+      }
+
+      return callback(
+        new Error('Not allowed by CORS')
+      )
+    },
+
     methods: [
       'GET',
       'POST',
@@ -79,10 +104,12 @@ app.use(
       'DELETE',
       'OPTIONS',
     ],
+
     allowedHeaders: [
       'Content-Type',
       'Authorization',
     ],
+
     credentials: false,
   })
 )
@@ -93,7 +120,10 @@ app.use(
   })
 )
 
-// Global API rate limiter
+// ========================================
+// GLOBAL API RATE LIMITER
+// ========================================
+
 app.use(
   '/api',
   apiRateLimiter
@@ -231,18 +261,18 @@ app.use(
   auditRoutes
 )
 
-// ========================================
+
 // AI APIs
-// ========================================
+
 
 app.use(
   '/api/ai',
   aiRoutes
 )
 
-// ========================================
+
 // 404 HANDLER
-// ========================================
+
 
 app.use((req, res) => {
   res.status(404).json({
@@ -251,9 +281,9 @@ app.use((req, res) => {
   })
 })
 
-// ========================================
+
 // GLOBAL ERROR HANDLER
-// ========================================
+
 
 app.use(
   (error, req, res, next) => {
@@ -269,9 +299,9 @@ app.use(
   }
 )
 
-// ========================================
+
 // START SERVER
-// ========================================
+
 
 app.listen(PORT, () => {
   console.log(
