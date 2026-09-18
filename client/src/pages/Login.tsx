@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-
+import apiFetch from '../api'
 
 function Login() {
   const navigate = useNavigate()
@@ -28,13 +28,10 @@ function Login() {
     try {
       setLoading(true)
 
-      const response = await fetch(
-        'http://localhost:5000/api/auth/login',
+      const response = await apiFetch(
+        '/auth/login',
         {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
           body: JSON.stringify({
             username: username.trim(),
             password,
@@ -78,7 +75,10 @@ function Login() {
 
       navigate(from, { replace: true })
     } catch (error) {
-      console.error('Customer login error:', error)
+      console.error(
+        'Customer login error:',
+        error
+      )
 
       setError(
         'Unable to connect to server. Please try again.'
