@@ -295,11 +295,6 @@ function Dashboard() {
       summary.total_balance || 0
     )
 
-  const totalLoanOutstanding =
-    Number(
-      summary.total_loan_outstanding || 0
-    )
-
   const totalCardUsed =
     Number(
       summary.total_card_used || 0

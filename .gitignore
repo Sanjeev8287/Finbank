@@ -101,3 +101,5 @@ build/
 # Local uploads
 
 uploads/
+# Root Python virtual environment
+/venv/
