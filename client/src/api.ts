@@ -1,6 +1,6 @@
 const API_BASE_URL =
   import.meta.env.VITE_API_URL ||
-  'http://localhost:5000/api'
+  'https://finbank-w6h3.onrender.com/api'
 
 export const apiFetch = async (
   endpoint: string,
