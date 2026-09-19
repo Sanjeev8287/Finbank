@@ -209,6 +209,7 @@ function RMDashboard() {
           color: white;
           font-size: 14px;
           font-weight: 800;
+          flex-shrink: 0;
         }
 
         .rm-ai-text {
@@ -518,7 +519,6 @@ function RMDashboard() {
         ========================== */
 
         @media(max-width: 1100px) {
-
           .rm-stats {
             grid-template-columns: repeat(2, 1fr);
           }
@@ -526,7 +526,6 @@ function RMDashboard() {
           .rm-grid {
             grid-template-columns: 1fr;
           }
-
         }
 
         /* =========================
@@ -534,7 +533,6 @@ function RMDashboard() {
         ========================== */
 
         @media(max-width: 750px) {
-
           .rm-sidebar {
             width: 205px;
           }
@@ -549,13 +547,12 @@ function RMDashboard() {
 
           .rm-customer {
             grid-template-columns:
-              40px 1fr 80px;
+              40px 1.5fr 80px;
           }
 
           .rm-customer-email {
             display: none;
           }
-
         }
 
         /* =========================
@@ -563,7 +560,6 @@ function RMDashboard() {
         ========================== */
 
         @media(max-width: 600px) {
-
           .rm-page {
             display: block;
           }
@@ -615,16 +611,13 @@ function RMDashboard() {
             grid-template-columns:
               40px 1fr 75px;
           }
-
         }
 
       `}</style>
 
       <div className="rm-page">
 
-        {/* =========================
-            SIDEBAR
-        ========================== */}
+        {/* SIDEBAR */}
 
         <aside className="rm-sidebar">
 
@@ -641,7 +634,6 @@ function RMDashboard() {
 
           </div>
 
-
           <nav className="rm-nav">
 
             <button
@@ -654,7 +646,6 @@ function RMDashboard() {
               <span>Dashboard</span>
             </button>
 
-
             <button
               onClick={() =>
                 navigate('/rm-customers')
@@ -663,7 +654,6 @@ function RMDashboard() {
               ◉
               <span>Customers</span>
             </button>
-
 
             <button
               onClick={() =>
@@ -674,7 +664,6 @@ function RMDashboard() {
               <span>Accounts</span>
             </button>
 
-
             <button
               onClick={() =>
                 navigate('/rm-cards')
@@ -683,7 +672,6 @@ function RMDashboard() {
               ▭
               <span>Cards</span>
             </button>
-
 
             <button
               onClick={() =>
@@ -694,7 +682,6 @@ function RMDashboard() {
               <span>Loans</span>
             </button>
 
-
             <button
               onClick={() =>
                 navigate('/rm-service-requests')
@@ -703,7 +690,6 @@ function RMDashboard() {
               ◌
               <span>Service Requests</span>
             </button>
-
 
             <button
               onClick={() =>
@@ -714,7 +700,6 @@ function RMDashboard() {
               <span>Activity</span>
             </button>
 
-
             <button
               onClick={() =>
                 navigate('/rm-profile')
@@ -724,27 +709,22 @@ function RMDashboard() {
               <span>My Profile</span>
             </button>
 
-
-            {/* AI DIVIDER */}
+            {/* AI SECTION */}
 
             <div className="rm-ai-divider"></div>
 
-
-            {/* AI ASSISTANT */}
-
             <button
+              type="button"
               className="rm-ai-nav"
               onClick={() =>
                 navigate('/rm-ai-assistant')
               }
             >
-
               <span className="rm-ai-icon">
                 ✦
               </span>
 
               <span className="rm-ai-text">
-
                 <strong>
                   AI Assistant
                 </strong>
@@ -752,17 +732,15 @@ function RMDashboard() {
                 <small>
                   Customer Intelligence
                 </small>
-
               </span>
-
             </button>
 
           </nav>
 
-
           {/* LOGOUT */}
 
           <button
+            type="button"
             className="rm-logout"
             onClick={logout}
           >
@@ -771,10 +749,7 @@ function RMDashboard() {
 
         </aside>
 
-
-        {/* =========================
-            MAIN CONTENT
-        ========================== */}
+        {/* MAIN */}
 
         <main className="rm-main">
 
@@ -796,17 +771,13 @@ function RMDashboard() {
 
             </div>
 
-
             {data && (
-
               <div className="rm-user">
 
                 <div className="rm-avatar">
-
                   {data.relationshipManager.full_name
                     .charAt(0)
                     .toUpperCase()}
-
                 </div>
 
                 <div>
@@ -828,40 +799,31 @@ function RMDashboard() {
                 </div>
 
               </div>
-
             )}
 
           </header>
 
-
           {/* LOADING */}
 
           {loading && (
-
             <div className="rm-message">
               Loading RM dashboard...
             </div>
-
           )}
-
 
           {/* ERROR */}
 
           {error && (
-
             <div className="rm-message">
               {error}
             </div>
-
           )}
-
 
           {/* DATA */}
 
           {!loading &&
             !error &&
             data && (
-
               <>
 
                 {/* STATS */}
@@ -880,7 +842,6 @@ function RMDashboard() {
 
                   </div>
 
-
                   <div className="rm-stat">
 
                     <span className="rm-stat-label">
@@ -893,7 +854,6 @@ function RMDashboard() {
 
                   </div>
 
-
                   <div className="rm-stat">
 
                     <span className="rm-stat-label">
@@ -905,7 +865,6 @@ function RMDashboard() {
                     </strong>
 
                   </div>
-
 
                   <div className="rm-stat">
 
@@ -920,7 +879,6 @@ function RMDashboard() {
                   </div>
 
                 </section>
-
 
                 {/* CONTENT */}
 
@@ -937,7 +895,6 @@ function RMDashboard() {
                     <p className="rm-panel-subtitle">
                       Customers currently assigned to you
                     </p>
-
 
                     {data.customers.length === 0 ? (
 
@@ -956,13 +913,10 @@ function RMDashboard() {
                           >
 
                             <div className="rm-customer-avatar">
-
                               {customer.full_name
                                 .charAt(0)
                                 .toUpperCase()}
-
                             </div>
-
 
                             <div className="rm-customer-name">
 
@@ -976,11 +930,9 @@ function RMDashboard() {
 
                             </div>
 
-
                             <div className="rm-customer-email">
                               {customer.email}
                             </div>
-
 
                             <div
                               className={
@@ -1001,7 +953,6 @@ function RMDashboard() {
                     )}
 
                   </section>
-
 
                   {/* RIGHT SIDE */}
 
@@ -1025,7 +976,6 @@ function RMDashboard() {
 
                     </div>
 
-
                     <div className="rm-side-card">
 
                       <small>
@@ -1047,7 +997,6 @@ function RMDashboard() {
                 </div>
 
               </>
-
             )}
 
         </main>
