@@ -1,11 +1,25 @@
+const AI_SERVICE_URL =
+  process.env.AI_SERVICE_URL ||
+  'http://127.0.0.1:8000'
+
+// ========================================
+// CUSTOMER AI
+// ========================================
+
 const askCustomerAI = async (req, res) => {
   try {
-    const customerId = Number(req.user?.customerId)
+    const customerId = Number(
+      req.user?.customerId
+    )
 
-    if (!Number.isInteger(customerId) || customerId <= 0) {
+    if (
+      !Number.isInteger(customerId) ||
+      customerId <= 0
+    ) {
       return res.status(400).json({
         success: false,
-        message: 'Customer account is not linked',
+        message:
+          'Customer account is not linked',
       })
     }
 
@@ -23,7 +37,7 @@ const askCustomerAI = async (req, res) => {
     }
 
     const response = await fetch(
-      'http://127.0.0.1:8000/ai/chat',
+      `${AI_SERVICE_URL}/ai/chat`,
       {
         method: 'POST',
         headers: {
@@ -39,6 +53,11 @@ const askCustomerAI = async (req, res) => {
     const data = await response.json()
 
     if (!response.ok) {
+      console.error(
+        'AI service customer error:',
+        data
+      )
+
       return res.status(502).json({
         success: false,
         message: 'AI service failed',
@@ -57,11 +76,11 @@ const askCustomerAI = async (req, res) => {
 
     return res.status(500).json({
       success: false,
-      message: 'Failed to process AI request',
+      message:
+        'Failed to process AI request',
     })
   }
 }
-
 
 // ========================================
 // RM AI
@@ -74,7 +93,9 @@ const askRMAI = async (req, res) => {
     )
 
     if (
-      !Number.isInteger(relationshipManagerId) ||
+      !Number.isInteger(
+        relationshipManagerId
+      ) ||
       relationshipManagerId <= 0
     ) {
       return res.status(400).json({
@@ -98,7 +119,7 @@ const askRMAI = async (req, res) => {
     }
 
     const response = await fetch(
-      'http://127.0.0.1:8000/ai/rm-chat',
+      `${AI_SERVICE_URL}/ai/rm-chat`,
       {
         method: 'POST',
         headers: {
@@ -138,11 +159,11 @@ const askRMAI = async (req, res) => {
 
     return res.status(500).json({
       success: false,
-      message: 'Failed to process RM AI request',
+      message:
+        'Failed to process RM AI request',
     })
   }
 }
-
 
 module.exports = {
   askCustomerAI,
