@@ -60,6 +60,15 @@ const aiRoutes = require('./routes/aiRoutes')
 
 const app = express()
 
+// ========================================
+// RENDER / REVERSE PROXY
+// ========================================
+
+// Render runs the application behind a proxy.
+// This allows express-rate-limit to safely
+// handle the X-Forwarded-For header.
+app.set('trust proxy', 1)
+
 const PORT = process.env.PORT || 5000
 
 // ========================================
