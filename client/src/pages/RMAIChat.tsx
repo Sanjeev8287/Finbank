@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import axios from 'axios'
 import './RMAIChat.css'
+import apiFetch from '../api'
 
 type Message = {
   role: 'user' | 'assistant'
@@ -38,23 +38,25 @@ const RMAIChat = () => {
     setLoading(true)
 
     try {
-      const token =
-        localStorage.getItem('finbank_token')
-
-      const response = await axios.post(
-        'http://localhost:5000/api/ai/rm-chat',
-        {
+      const response = await apiFetch('/ai/rm-chat', {
+        method: 'POST',
+        body: JSON.stringify({
           question: userQuestion,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      )
+        }),
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(
+          data?.message ||
+            'Unable to contact the AI service.'
+        )
+      }
 
       const answer =
-        response.data?.answer ||
+        data?.answer ||
+        data?.response ||
         'I could not generate a response.'
 
       setMessages((prev) => [
@@ -64,7 +66,7 @@ const RMAIChat = () => {
           content: answer,
         },
       ])
-    } catch (error: any) {
+    } catch (error) {
       console.error('RM AI error:', error)
 
       setMessages((prev) => [
@@ -72,8 +74,9 @@ const RMAIChat = () => {
         {
           role: 'assistant',
           content:
-            error.response?.data?.message ||
-            'Something went wrong while contacting the AI service.',
+            error instanceof Error
+              ? error.message
+              : 'Something went wrong while contacting the AI service.',
         },
       ])
     } finally {
@@ -183,6 +186,7 @@ const RMAIChat = () => {
                 <span className="number-dot">
                   {trimmed.match(/^\d+/)?.[0]}
                 </span>
+
                 <span>
                   {trimmed.replace(
                     /^\d+\.\s*/,
@@ -278,6 +282,7 @@ const RMAIChat = () => {
 
               <button
                 key={item.title}
+                type="button"
                 className="quick-card"
                 onClick={() =>
                   askAI(item.text)
@@ -423,6 +428,7 @@ const RMAIChat = () => {
               />
 
               <button
+                type="button"
                 className="ask-button"
                 onClick={() => askAI()}
                 disabled={
