@@ -3,6 +3,47 @@ const AI_SERVICE_URL =
   'http://127.0.0.1:8000'
 
 // ========================================
+// HELPER
+// ========================================
+
+const readAIResponse = async (response) => {
+  const contentType =
+    response.headers.get('content-type') || ''
+
+  const responseText = await response.text()
+
+  let data = null
+
+  if (
+    contentType.includes('application/json')
+  ) {
+    try {
+      data = JSON.parse(responseText)
+    } catch (error) {
+      console.error(
+        'AI service returned invalid JSON:',
+        responseText.slice(0, 1000)
+      )
+    }
+  } else {
+    console.error(
+      'AI service returned non-JSON response:',
+      {
+        status: response.status,
+        contentType,
+        body: responseText.slice(0, 1000),
+      }
+    )
+  }
+
+  return {
+    data,
+    responseText,
+    contentType,
+  }
+}
+
+// ========================================
 // CUSTOMER AI
 // ========================================
 
@@ -36,12 +77,18 @@ const askCustomerAI = async (req, res) => {
       })
     }
 
+    console.log(
+      'Calling Customer AI:',
+      `${AI_SERVICE_URL}/ai/chat`
+    )
+
     const response = await fetch(
       `${AI_SERVICE_URL}/ai/chat`,
       {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          Accept: 'application/json',
         },
         body: JSON.stringify({
           customer_id: customerId,
@@ -50,28 +97,52 @@ const askCustomerAI = async (req, res) => {
       }
     )
 
-    const data = await response.json()
+    const {
+      data,
+      responseText,
+      contentType,
+    } = await readAIResponse(response)
+
+    console.log(
+      'Customer AI response:',
+      response.status,
+      contentType
+    )
 
     if (!response.ok) {
       console.error(
         'AI service customer error:',
-        data
+        responseText.slice(0, 1000)
       )
 
       return res.status(502).json({
         success: false,
-        message: 'AI service failed',
+        message:
+          data?.detail ||
+          data?.message ||
+          'AI service failed',
+      })
+    }
+
+    if (!data) {
+      return res.status(502).json({
+        success: false,
+        message:
+          'AI service returned an invalid response',
       })
     }
 
     return res.json({
       success: true,
-      answer: data.answer,
+      answer:
+        data.answer ||
+        data.response ||
+        'I could not generate a response.',
     })
   } catch (error) {
     console.error(
       'Customer AI error:',
-      error.message
+      error
     )
 
     return res.status(500).json({
@@ -118,12 +189,21 @@ const askRMAI = async (req, res) => {
       })
     }
 
+    const aiEndpoint =
+      `${AI_SERVICE_URL}/ai/rm-chat`
+
+    console.log(
+      'Calling RM AI:',
+      aiEndpoint
+    )
+
     const response = await fetch(
-      `${AI_SERVICE_URL}/ai/rm-chat`,
+      aiEndpoint,
       {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          Accept: 'application/json',
         },
         body: JSON.stringify({
           relationship_manager_id:
@@ -133,28 +213,52 @@ const askRMAI = async (req, res) => {
       }
     )
 
-    const data = await response.json()
+    const {
+      data,
+      responseText,
+      contentType,
+    } = await readAIResponse(response)
+
+    console.log(
+      'RM AI response:',
+      response.status,
+      contentType
+    )
 
     if (!response.ok) {
       console.error(
         'AI service RM error:',
-        data
+        responseText.slice(0, 1000)
       )
 
       return res.status(502).json({
         success: false,
-        message: 'AI service failed',
+        message:
+          data?.detail ||
+          data?.message ||
+          'AI service failed',
+      })
+    }
+
+    if (!data) {
+      return res.status(502).json({
+        success: false,
+        message:
+          'AI service returned an invalid response',
       })
     }
 
     return res.json({
       success: true,
-      answer: data.answer,
+      answer:
+        data.answer ||
+        data.response ||
+        'I could not generate a response.',
     })
   } catch (error) {
     console.error(
       'RM AI error:',
-      error.message
+      error
     )
 
     return res.status(500).json({
