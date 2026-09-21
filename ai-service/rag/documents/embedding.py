@@ -1,88 +1,66 @@
-import os
+import re
+import math
+import hashlib
 from typing import List
 
-from openai import OpenAI
-from dotenv import load_dotenv
+
+EMBEDDING_DIMENSION = 768
 
 
-load_dotenv()
+def _tokenize(text: str) -> List[str]:
+    text = text.lower()
+
+    words = re.findall(r"[a-z0-9]+", text)
+
+    stop_words = {
+        "the", "is", "are", "a", "an", "and", "or", "of",
+        "to", "for", "in", "on", "at", "by", "with", "from",
+        "what", "which", "how", "can", "do", "does", "i",
+        "my", "me", "you", "your", "be", "this", "that"
+    }
+
+    return [
+        word
+        for word in words
+        if word not in stop_words and len(word) > 1
+    ]
 
 
-GROQ_API_KEY = os.getenv("GROQ_API_KEY")
-
-
-if not GROQ_API_KEY:
-    raise ValueError(
-        "GROQ_API_KEY is not configured in .env"
-    )
-
-
-client = OpenAI(
-    api_key=GROQ_API_KEY,
-    base_url="https://api.groq.com/openai/v1",
-)
+def _hash_index(token: str) -> int:
+    digest = hashlib.md5(token.encode("utf-8")).digest()
+    number = int.from_bytes(digest[:8], byteorder="big")
+    return number % EMBEDDING_DIMENSION
 
 
 def create_embedding(text: str) -> List[float]:
-    """
-    Create an embedding for the given text.
+    if not text or not text.strip():
+        return [0.0] * EMBEDDING_DIMENSION
 
-    Note:
-    Groq's OpenAI-compatible chat API does not provide
-    a general-purpose embedding endpoint, so this function
-    uses a local sentence-transformers model.
-    """
+    tokens = _tokenize(text)
 
-    try:
-        from sentence_transformers import SentenceTransformer
+    vector = [0.0] * EMBEDDING_DIMENSION
 
-    except ImportError:
-        raise ImportError(
-            "sentence-transformers is not installed. "
-            "Run: pip install sentence-transformers"
-        )
+    # Word features
+    for token in tokens:
+        index = _hash_index(token)
+        vector[index] += 1.0
 
-    model = SentenceTransformer(
-        "all-MiniLM-L6-v2"
-    )
+    # Two-word phrase features
+    for index in range(len(tokens) - 1):
+        phrase = f"{tokens[index]}_{tokens[index + 1]}"
+        vector[_hash_index(phrase)] += 1.5
 
-    embedding = model.encode(
-        text,
-        normalize_embeddings=True,
-    )
+    # Normalize vector
+    magnitude = math.sqrt(sum(value * value for value in vector))
 
-    return embedding.tolist()
+    if magnitude == 0:
+        return vector
+
+    return [value / magnitude for value in vector]
 
 
-def create_embeddings(
-    texts: List[str],
-) -> List[List[float]]:
-    """
-    Create embeddings for multiple text chunks.
-    """
-
+def create_embeddings(texts: List[str]) -> List[List[float]]:
     if not texts:
         return []
 
-    try:
-        from sentence_transformers import SentenceTransformer
-
-    except ImportError:
-        raise ImportError(
-            "sentence-transformers is not installed. "
-            "Run: pip install sentence-transformers"
-        )
-
-    model = SentenceTransformer(
-        "all-MiniLM-L6-v2"
-    )
-
-    embeddings = model.encode(
-        texts,
-        normalize_embeddings=True,
-    )
-
-    return [
-        embedding.tolist()
-        for embedding in embeddings
-    ]
+    return [create_embedding(text) for text in texts]
